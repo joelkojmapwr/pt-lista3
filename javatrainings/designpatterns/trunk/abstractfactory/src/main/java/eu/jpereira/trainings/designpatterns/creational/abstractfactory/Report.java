@@ -22,7 +22,7 @@ import eu.jpereira.trainings.designpatterns.creational.abstractfactory.xml.XMLRe
 import eu.jpereira.trainings.designpatterns.creational.abstractfactory.xml.XMLReportFooter;
 import eu.jpereira.trainings.designpatterns.creational.abstractfactory.xml.XMLReportHeader;
 
-public class Report {
+public abstract class Report {
 
 	private String reportContent;
 	private ReportBody body;
@@ -31,23 +31,14 @@ public class Report {
 	private String reportType;
 	
 
-	
+	public abstract void createReport();
 	
 	/**
 	 * @param string
 	 */
-	public Report(String string) {
-		this.reportType = string;
-		if ( reportType.equals("JSON")) {
-			//to compose Report with JSON objects
-			this.setBody(new JSONReportBody());
-			this.setFooter(new JSONReportFooter());
-			this.setHeader(new JSONReportHeader());
-		} else {
-			this.setFooter(new XMLReportFooter());
-			this.setHeader(new XMLReportHeader());
-			this.setBody(new XMLReportBody());
-		}
+	public Report() {
+
+		this.createReport();
 	}
 
 
@@ -91,5 +82,8 @@ public class Report {
 		return header;
 	}
 
+	public void setReportType(String reportType) {
+		this.reportType = reportType;
+	}
 	
 }

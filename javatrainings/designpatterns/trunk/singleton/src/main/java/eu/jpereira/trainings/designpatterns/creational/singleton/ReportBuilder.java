@@ -48,7 +48,8 @@ public class ReportBuilder {
 		configuredSites.add("http://stackoverflow.com");
 	}
 
-	public ReportBuilder() {
+	// Joel changed from public to private
+	private ReportBuilder() {
 		initiatlize();
 	}
 
@@ -92,10 +93,15 @@ public class ReportBuilder {
 	 */
 	public static ReportBuilder getInstance() {
 		System.out.println("Getting instance for Thread " + Thread.currentThread().getId());
+		// Joel changed
 		if (instance == null) {
-			System.out.println("Instance is null for Thread " + Thread.currentThread().getId());
-			instance = new ReportBuilder();
-			System.out.println("Returing " + instance.hashCode() + " instance to Thread " + Thread.currentThread().getId());
+			synchronized (ReportBuilder.class) {
+				if (instance == null) {
+					System.out.println("Instance is null for Thread " + Thread.currentThread().getId());
+					instance = new ReportBuilder();
+					System.out.println("Returing " + instance.hashCode() + " instance to Thread " + Thread.currentThread().getId());
+				}
+			}
 		}
 		return instance;
 	}

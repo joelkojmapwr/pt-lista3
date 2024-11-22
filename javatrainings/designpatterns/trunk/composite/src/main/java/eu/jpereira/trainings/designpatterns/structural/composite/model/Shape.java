@@ -32,7 +32,9 @@ public abstract class Shape {
 	 *         otherwise
 	 */
 	public CompositeShape asComposite() {
-		//TODO: Implement
+		if (this instanceof CompositeShape) {
+			return (CompositeShape) this;
+		}
 		return null;
 	}
 

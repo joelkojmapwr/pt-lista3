@@ -15,6 +15,9 @@
  */
 package eu.jpereira.trainings.designpatterns.creational.factorymethod;
 
+import eu.jpereira.trainings.designpatterns.creational.factorymethod.factory.ReportFactory;
+import eu.jpereira.trainings.designpatterns.creational.factorymethod.factory.ConcreteReportFactory;
+
 /**
  * The Report Generator will create reports based on a given type
  * @author jpereira
@@ -29,22 +32,7 @@ public class ReportGenerator {
 	 * @return the generated report, or null of type is unknown
 	 */
 	public Report generateReport(ReportData data, String type) {
-
-		Report generatedReport = null;
-
-		if (type.equals("JSON")) {
-			generatedReport = new JSONReport();
-		} else if (type.equals("XML")) {
-			generatedReport = new XMLReport();
-		} else if (type.equals("HTML")) {
-			generatedReport = new HTMLReport();
-		} else if (type.equals("PDF")) {
-			generatedReport = new PDFReport();
-		}
-		if (generatedReport != null) {
-			generatedReport.generateReport(data);
-		}
-
-		return generatedReport;
+		ReportFactory factory = new ConcreteReportFactory();
+		return factory.createReport(type, data);
 	}
 }

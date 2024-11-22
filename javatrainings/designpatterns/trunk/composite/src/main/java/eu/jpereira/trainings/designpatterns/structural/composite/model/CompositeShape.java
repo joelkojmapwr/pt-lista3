@@ -16,6 +16,7 @@
 package eu.jpereira.trainings.designpatterns.structural.composite.model;
 
 import java.util.List;
+import java.util.ArrayList;
 
 
 /**
@@ -27,7 +28,7 @@ public abstract class CompositeShape extends Shape {
 	List<Shape> shapes;
 
 	public CompositeShape() {
-		this.shapes = createShapesList();
+		this.shapes = new ArrayList<Shape>();
 	}
 
 	/**
@@ -39,7 +40,12 @@ public abstract class CompositeShape extends Shape {
 	 *         was not present
 	 */
 	public boolean removeShape(Shape shape) {
-		// TODO: implement
+		for (Shape currentShape : shapes) {
+			if (currentShape.equals(shape)) {
+				shapes.remove(shape);
+				return true;
+			}
+		}
 		return false;
 
 	}
@@ -50,8 +56,17 @@ public abstract class CompositeShape extends Shape {
 	 * @return the total count of shapes if the shape is composite. -1 otherwise
 	 */
 	public int getShapeCount() {
-		// TODO: implement
-		return 0;
+		if (this instanceof CompositeShape == false) {
+			return -1;
+		}
+		int countShapes=0;
+		for (Shape shape : shapes) {
+			if (shape instanceof CompositeShape) {
+				countShapes+=shape.asComposite().getShapeCount();
+			}
+			countShapes++;
+		}
+		return countShapes;
 
 	}
 
@@ -63,14 +78,15 @@ public abstract class CompositeShape extends Shape {
 	 * @throws ShapeDoesNotSupportChildren
 	 *             if this shape is not a composite
 	 */
-	public void addShape(Shape shape) {
-		// TODO: Implement
+	public void addShape(Shape shape) throws ShapeDoesNotSupportChildren {
+		if (this instanceof CompositeShape == false) {
+			throw new ShapeDoesNotSupportChildren();
+		}
+		shapes.add(shape);
 	}
 
 	public List<Shape> getShapes() {
-		// TODO: Implement
-		return null;
-
+		return shapes;
 	}
 
 	/**
@@ -78,8 +94,13 @@ public abstract class CompositeShape extends Shape {
 	 * @return
 	 */
 	public List<Shape> getShapesByType(ShapeType circle) {
-		return null;
-		// TODO: Implement
+		List<Shape> shapesByType = new ArrayList<Shape>();
+		for (Shape shape : shapes) {
+			if (shape.getType().equals(circle)) {
+				shapesByType.add(shape);
+			}
+		}
+		return shapesByType;
 	}
 
 	/**
@@ -88,17 +109,51 @@ public abstract class CompositeShape extends Shape {
 	 * @return
 	 */
 	public List<Shape> getLeafShapes() {
-		// TODO: Implement
-		return null;
+		List<Shape> leafs = new ArrayList<Shape>();
+		for (Shape shape : shapes) {
+			if (shape instanceof CompositeShape == false) {
+				leafs.add(shape);
+			} else if (shape.asComposite().getShapeCount() == 0) {
+				// current shape is composite but doesn't have children so it's a leaf
+				leafs.add(shape);
+			} else {
+				leafs.addAll(shape.asComposite().getLeafShapes());
+			}
+		}
+		return leafs;
 	}
 
-	/**
+	@Override
+	public void setX(int x) {
+		super.setX(x);
+		for (Shape shape : shapes) {
+			shape.setX(x);
+		}
+	}
+
+	@Override 
+	public void setY(int y) {
+		super.setY(y);
+		for (Shape shape : shapes) {
+			shape.setY(y);
+		}
+	}
+
+	@Override
+	public void move(int xIncrement, int yIncrement) {
+		super.move(xIncrement, yIncrement);
+		for (Shape shape : shapes) {
+			shape.move(xIncrement, yIncrement);
+		}
+	}
+
+	/*/**
 	 * Factory method for the list of children of this shape
 	 * 
 	 * @return
-	 */
+	 
 	protected List<Shape> createShapesList() {
 		return null;
 		// TODO: Implement
-	}
+	}*/
 }
