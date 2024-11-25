@@ -20,16 +20,28 @@ import static org.mockito.Mockito.*;
 import org.junit.Test;
 
 import eu.jpereira.trainings.designpatterns.structural.facade.BookstoreFacade;
+import eu.jpereira.trainings.designpatterns.structural.facade.DefaultBookStoreFacade;
 import eu.jpereira.trainings.designpatterns.structural.facade.model.Book;
 import eu.jpereira.trainings.designpatterns.structural.facade.model.Customer;
 import eu.jpereira.trainings.designpatterns.structural.facade.model.DispatchReceipt;
 import eu.jpereira.trainings.designpatterns.structural.facade.model.Order;
+import eu.jpereira.trainings.designpatterns.structural.facade.service.BookDBService;
+import eu.jpereira.trainings.designpatterns.structural.facade.service.CustomerDBService;
+import eu.jpereira.trainings.designpatterns.structural.facade.service.OrderingService;
+import eu.jpereira.trainings.designpatterns.structural.facade.service.WharehouseService;
+import eu.jpereira.trainings.designpatterns.structural.facade.service.CustomerNotificationService;
 
 /**
  * @author windows
  * 
  */
 public class BookStoreFacadeTest extends AbstractClientTest {
+
+	private BookDBService bookService = mock(BookDBService.class);
+	private CustomerDBService customerService = mock(CustomerDBService.class);
+	private OrderingService orderingService = mock(OrderingService.class);
+	private WharehouseService warehouseService = mock(WharehouseService.class);
+	private CustomerNotificationService customerNotificationService = mock(CustomerNotificationService.class);
 
 	@Test
 	public void testPlaceOrder() {
@@ -71,6 +83,17 @@ public class BookStoreFacadeTest extends AbstractClientTest {
 		// impl.setWarehouseService(wharehouseService)
 		// ...
 		// Return an instance of your facade implementation
-		return null;
+
+		DefaultBookStoreFacade facade = new DefaultBookStoreFacade();
+
+		
+
+		facade.setBookService(bookService);
+		facade.setCustomerService(customerService);
+		facade.setOrderingService(orderingService);
+		facade.setWharehouseService(warehouseService);
+		facade.setCustomerNotificationService(customerNotificationService);
+
+		return facade;
 	}
 }
